@@ -10,7 +10,7 @@ import StoreRegistrationMail from '../jobs/StoreRegistrationMail';
 class RegistrationController {
   async index(req, res) {
     const registrations = await Registration.findAll({
-      where: { student_id: req.params.studentId },
+      where: { student_id: req.params.student_id },
     });
 
     return res.json(registrations);
@@ -27,7 +27,7 @@ class RegistrationController {
     }
 
     const { plan_id } = req.body;
-    const student_id = req.params.studentId;
+    const { student_id } = req.params;
 
     const plan = await Plan.findByPk(plan_id);
     if (!plan) {
@@ -63,9 +63,9 @@ class RegistrationController {
   }
 
   async show(req, res) {
-    const { studentId, registrationId } = req.params;
+    const { student_id, id } = req.params;
     const registration = await Registration.findOne({
-      where: { student_id: studentId, id: registrationId },
+      where: { student_id, id },
     });
 
     if (!registration) {
@@ -84,9 +84,9 @@ class RegistrationController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { studentId, registrationId } = req.params;
+    const { student_id, id } = req.params;
     const registration = await Registration.findOne({
-      where: { student_id: studentId, id: registrationId },
+      where: { student_id, id },
     });
 
     if (!registration) {
@@ -108,9 +108,9 @@ class RegistrationController {
   }
 
   async delete(req, res) {
-    const { studentId, registrationId } = req.params;
+    const { student_id, id } = req.params;
     const registration = await Registration.findOne({
-      where: { student_id: studentId, id: registrationId },
+      where: { student_id, id },
     });
 
     if (!registration) {

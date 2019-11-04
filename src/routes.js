@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import CheckinController from './app/controllers/CheckinController';
 import PlanController from './app/controllers/PlanController';
 import StudentController from './app/controllers/StudentController';
 import RegistrationController from './app/controllers/RegistrationController';
@@ -12,6 +13,12 @@ const routes = new Router();
 routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
+
+/**
+ * Checkins
+ */
+routes.get('/students/:student_id/checkins', CheckinController.index);
+routes.post('/students/:student_id/checkins', CheckinController.store);
 
 /**
  * Plans
@@ -34,18 +41,21 @@ routes.delete('/students/:id', StudentController.delete);
 /**
  * Students
  */
-routes.get('/students/:studentId/registrations', RegistrationController.index);
-routes.post('/students/:studentId/registrations', RegistrationController.store);
+routes.get('/students/:student_id/registrations', RegistrationController.index);
+routes.post(
+  '/students/:student_id/registrations',
+  RegistrationController.store
+);
 routes.get(
-  '/students/:studentId/registrations/:registrationId',
+  '/students/:student_id/registrations/:id',
   RegistrationController.show
 );
 routes.put(
-  '/students/:studentId/registrations/:registrationId',
+  '/students/:student_id/registrations/:id',
   RegistrationController.update
 );
 routes.delete(
-  '/students/:studentId/registrations/:registrationId',
+  '/students/:student_id/registrations/:id',
   RegistrationController.delete
 );
 
