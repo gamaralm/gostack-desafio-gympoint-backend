@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import { isBefore, parseISO, addMonths, format } from 'date-fns';
+import Mail from '../../lib/Mail';
 import Registration from '../models/Registration';
+import Student from '../models/Student';
 import Plan from '../models/Plan';
 
 class RegistrationController {
@@ -23,6 +25,7 @@ class RegistrationController {
     }
 
     const { plan_id } = req.body;
+    const student_id = req.params.studentId;
 
     const plan = await Plan.findByPk(plan_id);
     if (!plan) {
@@ -38,12 +41,26 @@ class RegistrationController {
     const end_date = addMonths(start_date, plan.duration);
     const price = plan.duration * plan.price;
 
+    const student = await Student.findByPk(student_id);
+
     const registration = await Registration.create({
-      student_id: req.params.studentId,
+      student_id,
       plan_id,
       start_date,
       end_date,
       price,
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Matrícula Realizada',
+      template: 'newRegistration',
+      context: {
+        student: student.name,
+        plan: plan.title,
+        price: plan.price,
+        endDate: format(end_date, 'dd/MM/yyyy'),
+      },
     });
 
     return res.json(registration);
