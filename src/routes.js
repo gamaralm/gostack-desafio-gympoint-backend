@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
+import AnswerController from './app/controllers/AnswerController';
 import CheckinController from './app/controllers/CheckinController';
+import HelpOrderController from './app/controllers/HelpOrderController';
 import PlanController from './app/controllers/PlanController';
 import StudentController from './app/controllers/StudentController';
 import RegistrationController from './app/controllers/RegistrationController';
@@ -18,7 +20,13 @@ routes.use(authMiddleware);
  * Checkins
  */
 routes.get('/students/:student_id/checkins', CheckinController.index);
-routes.post('/students/:student_id/checkins', CheckinController.store);
+
+/**
+ * Help Orders
+ */
+routes.get('/students/:student_id/help-orders', HelpOrderController.index);
+routes.post('/students/:student_id/help-orders', HelpOrderController.store);
+routes.post('/help-orders/:id/answer', AnswerController.store);
 
 /**
  * Plans
